@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}MoviWeb - Select User{% endblock %}
+
+{% block content %}
+    <h2>Welcome to MoviWeb!</h2>
+    <p>Select a user to manage their favorite movies:</p>
+    
+    <div class="user-selection">
+        {% for user in users %}
+            <div class="user-card">
+                <h3>{{ user.username }}</h3>
+                <a href="{{ url_for('select_user', user_id=user.id) }}">Select</a>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
