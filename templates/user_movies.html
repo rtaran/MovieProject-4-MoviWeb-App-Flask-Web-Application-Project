@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ user.username }}'s Movies - MovieWeb App</title>
+</head>
+<body>
+    <h1>{{ user.username }}'s Movies</h1>
+    <ul>
+        {% for movie in movies %}
+            <li>
+                {{ movie.name }} - {{ movie.director }} ({{ movie.year }}), Rating: {{ movie.rating }}
+                <a href="/users/{{ user.id }}/update_movie/{{ movie.id }}">Edit</a>
+                <a href="/users/{{ user.id }}/delete_movie/{{ movie.id }}">Delete</a>
+            </li>
+        {% endfor %}
+    </ul>
+    <a href="/users/{{user.id}}/add_movie">Add Movie</a>
+    <a href="/users">Back to Users</a>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+</body>
+</html>

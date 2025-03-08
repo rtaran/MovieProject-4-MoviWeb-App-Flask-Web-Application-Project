@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Update Movie - MovieWeb App</title>
+</head>
+<body>
+    <h1>Update Movie</h1>
+    <form method="POST">
+        <label for="name">Name:</label>
+        <input type="text" name="name" value="{{ movie.name }}" required><br><br>
+        <label for="director">Director:</label>
+        <input type="text" name="director" value="{{ movie.director }}"><br><br>
+        <label for="year">Year:</label>
+        <input type="number" name="year" value="{{ movie.year }}"><br><br>
+        <label for="rating">Rating:</label>
+        <input type="number" step="0.1" name="rating" value="{{ movie.rating }}"><br><br>
+        <button type="submit">Update Movie</button>
+    </form>
+    <a href="/users/{{ movie.user_id }}">Back to Movies</a>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+</body>
+</html>
