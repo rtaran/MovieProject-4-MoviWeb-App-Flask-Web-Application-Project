@@ -1,30 +1,37 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Update Movie - MovieWeb App</title>
-</head>
-<body>
+{% extends "base.html" %}
+
+{% block title %}Update Movie - MovieWeb App{% endblock %}
+
+{% block content %}
     <h1>Update Movie</h1>
-    <form method="POST">
-        <label for="name">Name:</label>
-        <input type="text" name="name" value="{{ movie.name }}" required><br><br>
-        <label for="director">Director:</label>
-        <input type="text" name="director" value="{{ movie.director }}"><br><br>
-        <label for="year">Year:</label>
-        <input type="number" name="year" value="{{ movie.year }}"><br><br>
-        <label for="rating">Rating:</label>
-        <input type="number" step="0.1" name="rating" value="{{ movie.rating }}"><br><br>
-        <button type="submit">Update Movie</button>
+    
+    <form method="POST" class="movie-form">
+        <div class="form-group">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" value="{{ movie.name }}" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="director">Director:</label>
+            <input type="text" id="director" name="director" value="{{ movie.director }}">
+        </div>
+        
+        <div class="form-group">
+            <label for="year">Year:</label>
+            <input type="number" id="year" name="year" value="{{ movie.year }}">
+        </div>
+        
+        <div class="form-group">
+            <label for="rating">Rating:</label>
+            <input type="number" step="0.1" id="rating" name="rating" min="0" max="10" value="{{ movie.rating }}">
+        </div>
+        
+        <button type="submit" class="btn btn-success">
+            <i class="fas fa-save"></i> Update Movie
+        </button>
     </form>
-    <a href="/users/{{ movie.user_id }}">Back to Movies</a>
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            {% for category, message in messages %}
-                <div class="alert alert-{{ category }}">
-                    {{ message }}
-                </div>
-            {% endfor %}
-        {% endif %}
-    {% endwith %}
-</body>
-</html>
+    
+    <a href="{{ url_for('user_movies', user_id=movie.user_id) }}" class="back-link">
+        <i class="fas fa-arrow-left"></i> Back to Movies
+    </a>
+{% endblock %}

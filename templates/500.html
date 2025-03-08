@@ -1,11 +1,13 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>500 Internal Server Error</title>
-</head>
-<body>
-    <h1>500 Internal Server Error</h1>
-    <p>An internal server error occurred.</p>
-    <a href="/">Go back to the home page</a>
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block title %}500 Internal Server Error - MovieWeb App{% endblock %}
+
+{% block content %}
+    <div class="error-page">
+        <h1>500</h1>
+        <p>An internal server error occurred.</p>
+        <a href="{{ url_for('home') }}" class="btn">
+            <i class="fas fa-home"></i> Go back to the home page
+        </a>
+    </div>
+{% endblock %}

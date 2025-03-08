@@ -1,24 +1,23 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Add Movie - MovieWeb App</title>
-</head>
-<body>
+{% extends "base.html" %}
+
+{% block title %}Add Movie - MovieWeb App{% endblock %}
+
+{% block content %}
     <h1>Add Movie for {{ user.username }}</h1>
-    <form method="POST">
-        <label for="name">Movie Name:</label>
-        <input type="text" name="name" required><br><br>
-        <button type="submit">Add Movie</button>
+    
+    <form method="POST" class="movie-form">
+        <div class="form-group">
+            <label for="name">Movie Name:</label>
+            <input type="text" id="name" name="name" required autofocus
+                   placeholder="Enter movie name to search on OMDb">
+        </div>
+        
+        <button type="submit" class="btn btn-success">
+            <i class="fas fa-search"></i> Search & Add Movie
+        </button>
     </form>
-    <a href="/users/{{ user.id }}">Back to Movies</a>
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            {% for category, message in messages %}
-                <div class="alert alert-{{ category }}">
-                    {{ message }}
-                </div>
-            {% endfor %}
-        {% endif %}
-    {% endwith %}
-</body>
-</html>
+    
+    <a href="{{ url_for('user_movies', user_id=user.id) }}" class="back-link">
+        <i class="fas fa-arrow-left"></i> Back to Movies
+    </a>
+{% endblock %}
