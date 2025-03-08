@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block title %}Update Review - MovieWeb App{% endblock %}
+
+{% block content %}
+<div class="review-form-container">
+    <h1>Update Review for "{{ review.movie.name }}"</h1>
+    
+    <form method="POST" class="review-form">
+        <div class="form-group">
+            <label for="rating">Your Rating (0-10):</label>
+            <div class="rating-input">
+                <input type="number" id="rating" name="rating" min="0" max="10" step="0.1" required 
+                       value="{{ review.rating }}" class="rating-number-input">
+                <div class="star-rating">
+                    <i class="far fa-star" data-rating="2"></i>
+                    <i class="far fa-star" data-rating="4"></i>
+                    <i class="far fa-star" data-rating="6"></i>
+                    <i class="far fa-star" data-rating="8"></i>
+                    <i class="far fa-star" data-rating="10"></i>
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label for="review-text">Your Review:</label>
+            <textarea id="review-text" name="text" rows="8" required>{{ review.text }}</textarea>
+        </div>
+        
+        <button type="submit" class="btn btn-success">
+            <i class="fas fa-save"></i> Update Review
+        </button>
+    </form>
+    
+    <a href="{{ url_for('movie_details', user_id=review.user_id, movie_id=review.movie_id) }}" class="back-link">
+        <i class="fas fa-arrow-left"></i> Back to Movie
+    </a>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const ratingInput = document.getElementById('rating');
+        const stars = document.querySelectorAll('.star-rating i');
+        
+        // Initial star state based on current value
+        updateStars(ratingInput.value);
+        
+        // Update stars when rating input changes
+        ratingInput.addEventListener('input', function() {
+            updateStars(this.value);
+        });
+        
+        // Update rating when stars are clicked
+        stars.forEach(function(star) {
+            star.addEventListener('click', function() {
+                const rating = this.getAttribute('data-rating');
+                ratingInput.value = rating;
+                updateStars(rating);
+            });
+        });
+        
+        function updateStars(rating) {
+            const numericRating = parseFloat(rating);
+            
+            stars.forEach(function(star) {
+                const starValue = parseInt(star.getAttribute('data-rating'));
+                
+                if (starValue <= numericRating) {
+                    star.className = 'fas fa-star';
+                } else if (starValue - 2 < numericRating) {
+                    star.className = 'fas fa-star-half-alt';
+                } else {
+                    star.className = 'far fa-star';
+                }
+            });
+        }
+    });
+</script>
+{% endblock %}

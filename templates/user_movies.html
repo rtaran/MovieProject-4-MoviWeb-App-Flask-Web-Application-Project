@@ -10,16 +10,20 @@
             {% for movie in movies %}
                 <li class="movie-item">
                     <div class="movie-info">
-                        <h3>{{ movie.name }}</h3>
+                        <h3>
+                            <a href="{{ url_for('movie_details', user_id=user.id, movie_id=movie.id) }}">
+                                {{ movie.name }}
+                            </a>
+                        </h3>
                         <p>
                             {% if movie.director %}
                                 <span><i class="fas fa-video"></i> {{ movie.director }}</span>
                             {% endif %}
-                            
+
                             {% if movie.year %}
                                 <span><i class="fas fa-calendar"></i> {{ movie.year }}</span>
                             {% endif %}
-                            
+
                             {% if movie.rating %}
                                 <span class="rating">
                                     <i class="fas fa-star"></i> {{ movie.rating }}/10
@@ -28,6 +32,9 @@
                         </p>
                     </div>
                     <div class="movie-actions">
+                        <a href="{{ url_for('movie_details', user_id=user.id, movie_id=movie.id) }}" class="btn">
+                            <i class="fas fa-info-circle"></i> Details
+                        </a>
                         <a href="{{ url_for('update_movie', user_id=user.id, movie_id=movie.id) }}" class="btn">
                             <i class="fas fa-edit"></i> Edit
                         </a>

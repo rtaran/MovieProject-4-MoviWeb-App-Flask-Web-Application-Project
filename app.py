@@ -140,6 +140,84 @@ def delete_movie(user_id, movie_id):
     return redirect(url_for('user_movies', user_id=user_id))
 
 
+# New routes for movie details and reviews
+@app.route('/users/<int:user_id>/movies/<int:movie_id>')
+def movie_details(user_id, movie_id):
+    movie = data_manager.Movie.query.get_or_404(movie_id)
+    user = data_manager.User.query.get_or_404(user_id)
+    reviews = data_manager.get_movie_reviews(movie_id)
+    return render_template('movie_details.html', movie=movie, user=user, reviews=reviews)
+
+
+@app.route('/users/<int:user_id>/movies/<int:movie_id>/add_review', methods=['GET', 'POST'])
+def add_review(user_id, movie_id):
+    movie = data_manager.Movie.query.get_or_404(movie_id)
+    user = data_manager.User.query.get_or_404(user_id)
+
+    if request.method == 'POST':
+        text = request.form['text']
+        rating_str = request.form['rating']
+
+        if not text.strip():
+            flash('Review text cannot be empty!', 'error')
+            return render_template('add_review.html', movie=movie, user=user)
+
+        try:
+            rating = float(rating_str)
+            data_manager.add_review(user_id, movie_id, text, rating)
+            flash('Review added successfully!', 'success')
+            return redirect(url_for('movie_details', user_id=user_id, movie_id=movie_id))
+        except Exception as e:
+            flash(f'An error occurred: {e}', 'error')
+
+    return render_template('add_review.html', movie=movie, user=user)
+
+
+@app.route('/reviews/<int:review_id>/update', methods=['GET', 'POST'])
+def update_review(review_id):
+    review = data_manager.get_review(review_id)
+    if not review:
+        flash('Review not found!', 'error')
+        return redirect(url_for('home'))
+
+    if request.method == 'POST':
+        text = request.form['text']
+        rating_str = request.form['rating']
+
+        if not text.strip():
+            flash('Review text cannot be empty!', 'error')
+            return render_template('update_review.html', review=review)
+
+        try:
+            rating = float(rating_str)
+            data_manager.update_review(review_id, text, rating)
+            flash('Review updated successfully!', 'success')
+            return redirect(url_for('movie_details', user_id=review.user_id, movie_id=review.movie_id))
+        except Exception as e:
+            flash(f'An error occurred: {e}', 'error')
+
+    return render_template('update_review.html', review=review)
+
+
+@app.route('/reviews/<int:review_id>/delete')
+def delete_review(review_id):
+    review = data_manager.get_review(review_id)
+    if not review:
+        flash('Review not found!', 'error')
+        return redirect(url_for('home'))
+
+    user_id = review.user_id
+    movie_id = review.movie_id
+
+    try:
+        data_manager.delete_review(review_id)
+        flash('Review deleted successfully!', 'success')
+    except Exception as e:
+        flash(f'An error occurred: {e}', 'error')
+
+    return redirect(url_for('movie_details', user_id=user_id, movie_id=movie_id))
+
+
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html'), 404
