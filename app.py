@@ -3,7 +3,6 @@ import requests
 import os
 import datetime
 from datamanager.sqlite_data_manager import SQLiteDataManager
-
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///movieweb.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -12,7 +11,7 @@ app.secret_key = os.urandom(24)  # Secure secret key
 # Initialize data manager after app configuration
 data_manager = SQLiteDataManager(app)
 
-OMDB_API_KEY = "5429604c"
+OMDB_API_KEY = os.getenv("OMDB_API_KEY")
 
 
 def get_movie_data_from_omdb(movie_name):
