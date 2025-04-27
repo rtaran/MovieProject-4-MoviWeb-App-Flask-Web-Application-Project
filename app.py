@@ -105,11 +105,12 @@ def add_movie(user_id):
 @app.route('/users/<int:user_id>/update_movie/<int:movie_id>', methods=['GET', 'POST'])
 def update_movie(user_id, movie_id):
     movie = data_manager.Movie.query.get_or_404(movie_id)
+    user = data_manager.get_user_by_id(user_id)
     if request.method == 'POST':
         name = request.form['name']
         if not name.strip():
             flash('Movie name cannot be empty!', 'error')
-            return render_template('update_movie.html', movie=movie)
+            return render_template('update_movie.html', movie=movie, user=user)
 
         director = request.form['director']
         year_str = request.form['year']
@@ -228,4 +229,4 @@ def internal_server_error(e):
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, port=5001)
