@@ -1,7 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from datamanager.data_manager_interface import DataManagerInterface
 from datetime import datetime
-from models import db, User, Movie, Review
+from datamanager.models import db, User, Movie, Review
 
 class SQLiteDataManager(DataManagerInterface):
     def __init__(self, app):
