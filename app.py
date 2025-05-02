@@ -3,7 +3,6 @@ import requests
 import os
 import datetime
 from datamanager.sqlite_data_manager import SQLiteDataManager
-
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///movieweb.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -12,7 +11,7 @@ app.secret_key = os.urandom(24)  # Secure secret key
 # Initialize data manager after app configuration
 data_manager = SQLiteDataManager(app)
 
-OMDB_API_KEY = "5429604c"
+OMDB_API_KEY = os.getenv("OMDB_API_KEY")
 
 
 def get_movie_data_from_omdb(movie_name):
@@ -106,11 +105,12 @@ def add_movie(user_id):
 @app.route('/users/<int:user_id>/update_movie/<int:movie_id>', methods=['GET', 'POST'])
 def update_movie(user_id, movie_id):
     movie = data_manager.Movie.query.get_or_404(movie_id)
+    user = data_manager.get_user_by_id(user_id)
     if request.method == 'POST':
         name = request.form['name']
         if not name.strip():
             flash('Movie name cannot be empty!', 'error')
-            return render_template('update_movie.html', movie=movie)
+            return render_template('update_movie.html', movie=movie, user=user)
 
         director = request.form['director']
         year_str = request.form['year']
@@ -229,4 +229,4 @@ def internal_server_error(e):
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, port=5001)

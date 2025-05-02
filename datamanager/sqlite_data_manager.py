@@ -1,7 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from datamanager.data_manager_interface import DataManagerInterface
 from datetime import datetime
-
+from models import db, User, Movie, Review
 
 class SQLiteDataManager(DataManagerInterface):
     def __init__(self, app):
@@ -13,7 +13,9 @@ class SQLiteDataManager(DataManagerInterface):
             id = self.db.Column(self.db.Integer, primary_key=True)
             username = self.db.Column(self.db.String(80), unique=True, nullable=False)
             # Add relationship to reviews
-            reviews = self.db.relationship('Review', backref='author', lazy=True, cascade="all, delete-orphan")
+            reviews = self.db.relationship('Review',
+                                           backref='author', lazy=True,
+                                           cascade="all, delete-orphan")
 
             def __repr__(self):
                 return f'<User {self.username}>'
@@ -26,7 +28,9 @@ class SQLiteDataManager(DataManagerInterface):
             year = self.db.Column(self.db.Integer)
             rating = self.db.Column(self.db.Float)
             # Add relationship to reviews
-            reviews = self.db.relationship('Review', backref='movie', lazy=True, cascade="all, delete-orphan")
+            reviews = self.db.relationship('Review',
+                                           backref='movie', lazy=True,
+                                           cascade="all, delete-orphan")
 
             def __repr__(self):
                 return f'<Movie {self.name}>'
