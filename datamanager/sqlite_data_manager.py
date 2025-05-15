@@ -25,7 +25,12 @@ class SQLiteDataManager(DataManagerInterface):
         return self.User.query.get(user_id)
 
     def get_user_movies(self, user_id):
-        return self.Movie.query.filter_by(user_id=user_id).all()
+        # Get all reviews for the user
+        reviews = self.Review.query.filter_by(user_id=user_id).all()
+        # Extract the movie_ids from the reviews
+        movie_ids = [review.movie_id for review in reviews]
+        # Get all movies with these ids
+        return self.Movie.query.filter(self.Movie.id.in_(movie_ids)).all()
 
     def add_user(self, username):
         user = self.User(username=username)
@@ -34,9 +39,16 @@ class SQLiteDataManager(DataManagerInterface):
         return user
 
     def add_movie(self, user_id, name, director, year, rating):
+        # Create the movie
         movie = self.Movie(title=name)
         self.db.session.add(movie)
         self.db.session.commit()
+
+        # Create a review to connect the user and movie
+        review = self.Review(user_id=user_id, movie_id=movie.id, rating=rating or 0, comment="")
+        self.db.session.add(review)
+        self.db.session.commit()
+
         return movie
 
     def update_movie(self, movie_id, name, director, year, rating):
