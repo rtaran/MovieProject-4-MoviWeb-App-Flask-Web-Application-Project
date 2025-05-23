@@ -124,7 +124,7 @@ def update_movie(user_id, movie_id):
             return redirect(url_for('user_movies', user_id=user_id))
         except Exception as e:
             flash(f'An error occurred: {e}', 'error')
-    return render_template('update_movie.html', movie=movie)
+    return render_template('update_movie.html', movie=movie, user=user)
 
 
 @app.route('/users/<int:user_id>/delete_movie/<int:movie_id>')
